@@ -1,15 +1,9 @@
-[
-
-![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19865468.svg)
-
-](https://doi.org/10.5281/zenodo.19865468) 
+**DOI:** https://doi.org/10.5281/zenodo.19865468
 # ⬡ Loagaeth Linguistic Extractor
 ### Universal Ancient Language Intelligence Engine — OMEGA v5
 **Muhammad Zubair** | MS Clinical Psychology, Bahria University Lahore, Pakistan  
 **Contact:** mzpakistani9@gmail.com | **Site:** DesiMindCare.com  
 **Live Demo:** [Hugging Face Spaces](https://huggingface.co/spaces/your-name/loagaeth-extractor)
-
----
 
 ## About This Research Tool
 
