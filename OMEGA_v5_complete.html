@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d0f1e">
+<meta name="description" content="Universal Ancient Language Intelligence Engine — OMEGA v4 | Muhammad Zubair | Bahria University Islamabad">
+<!-- PWA Manifest inline -->
+<title>OMEGA v4 — Ancient Language Engine</title>
+<link rel="manifest" href="data:application/json,{
+  %22name%22:%22OMEGA%20v4%20Ancient%20Language%20Engine%22,
+  %22short_name%22:%22OMEGA%22,
+  %22start_url%22:%22.%22,
+  %22display%22:%22standalone%22,
+  %22background_color%22:%22%230d0f1e%22,
+  %22theme_color%22:%22%23c8922a%22,
+  %22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%3E%E2%AC%A1%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22any%22,%22type%22:%22image/svg+xml%22}]
+}">
+<style>
+/* ═══ RESET & BASE ═══ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f1e; --bg2:#12102a; --bg3:rgba(255,255,255,0.03);
+  --gold:#c8922a; --gold2:#e8b84b; --gold3:rgba(200,146,42,0.18);
+  --text:#e8dcc8; --muted:#8a7a6a; --dim:#5a5060;
+  --green:#5dba8a; --blue:#7ab4e8; --red:#e88a96; --purple:#b4a0e8;
+  --border:rgba(200,146,42,0.2); --border2:rgba(200,146,42,0.35);
+  --font:'Georgia','Times New Roman',serif; --mono:'Courier New',monospace;
+  --radius:10px; --shadow:0 4px 24px rgba(0,0,0,0.4);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;font-size:14px;line-height:1.5}
+button{cursor:pointer;font-family:var(--font)}
+input,textarea,select{font-family:var(--font)}
+img{max-width:100%}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgba(0,0,0,0.2)}
+::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:3px}
+
+/* ═══ LAYOUT ═══ */
+.header{background:rgba(5,3,15,0.98);border-bottom:2px solid var(--gold);padding:1rem 1.5rem;text-align:center;position:sticky;top:0;z-index:200;backdrop-filter:blur(10px)}
+.header-title{font-size:1.4rem;font-weight:700;color:var(--gold2);letter-spacing:.1em}
+.header-sub{font-size:.6rem;color:var(--dim);letter-spacing:.16em;text-transform:uppercase;margin-top:3px;font-family:var(--mono)}
+.badges{display:flex;gap:4px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.badge{padding:2px 8px;border-radius:12px;font-size:.54rem;font-family:var(--mono);background:rgba(200,146,42,0.1);color:var(--gold2);border:1px solid var(--border)}
+.badge.dim{background:rgba(60,50,80,0.3);color:var(--dim);border-color:rgba(60,50,80,0.4)}
+.main{padding:1.2rem;max-width:1440px;margin:0 auto}
+
+/* ═══ TABS ═══ */
+.nav-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);overflow-x:auto;background:rgba(5,3,15,0.5);border-radius:8px 8px 0 0;margin-bottom:1.2rem}
+.nav-tab{background:transparent;border:none;border-bottom:3px solid transparent;padding:.65rem 1rem;font-size:.66rem;letter-spacing:.08em;color:var(--dim);text-transform:uppercase;white-space:nowrap;transition:all .2s}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--gold2);border-bottom-color:var(--gold);background:rgba(200,146,42,0.06)}
+.panel{display:none}
+.panel.active{display:block}
+.sub-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:1rem}
+.sub-tab{background:transparent;border:none;border-bottom:2px solid transparent;padding:.5rem .9rem;font-size:.64rem;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;transition:all .2s}
+.sub-tab.active{color:var(--gold2);border-bottom-color:var(--gold)}
+
+/* ═══ CARDS & GRIDS ═══ */
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;margin-bottom:1rem}
+.card-gold{background:rgba(200,146,42,0.04);border-color:var(--border2)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.stat-card{background:rgba(0,0,0,0.45);border:1px solid var(--border);border-radius:8px;padding:.8rem .9rem}
+.stat-num{font-size:1.6rem;color:var(--gold2);font-family:var(--font)}
+.stat-lbl{font-size:.58rem;color:var(--muted);margin-top:3px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em}
+
+/* ═══ FORMS ═══ */
+label.lbl{font-size:.58rem;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:5px;font-family:var(--mono);display:block}
+input[type=text],input[type=password],textarea,select{width:100%;background:rgba(0,0,0,0.55);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:.78rem;font-family:var(--font);margin-bottom:9px;outline:none;transition:border-color .2s}
+input[type=text]:focus,input[type=password]:focus,textarea:focus,select:focus{border-color:var(--gold)}
+textarea{resize:vertical;min-height:110px}
+select{cursor:pointer;background:rgba(0,0,0,0.75)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+
+/* ═══ BUTTONS ═══ */
+.btn-run{width:100%;padding:.85rem;background:var(--gold);color:#1a1020;border:none;border-radius:8px;font-family:var(--font);font-size:.9rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:all .2s}
+.btn-run:hover{background:var(--gold2);box-shadow:0 0 20px rgba(200,146,42,0.3)}
+.btn-run:disabled{background:rgba(200,146,42,0.25);color:var(--dim);cursor:not-allowed}
+.btn-sm{font-size:.6rem;padding:4px 11px;background:rgba(200,146,42,0.1);color:var(--gold2);border:1px solid var(--border2);border-radius:5px;transition:all .2s}
+.btn-sm:hover{background:rgba(200,146,42,0.22)}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--gold2);border-radius:6px;padding:6px 14px;font-size:.72rem;transition:all .2s}
+.btn-outline:hover{background:var(--gold3)}
+.btn-row{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}
+
+/* ═══ UPLOAD ZONE ═══ */
+.upload-zone{border:2px dashed var(--border);border-radius:8px;padding:1.5rem;text-align:center;cursor:pointer;margin-bottom:9px;transition:all .2s;background:rgba(0,0,0,0.3);position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--gold);background:rgba(200,146,42,0.05)}
+.upload-zone img{width:100%;max-height:260px;object-fit:contain;border-radius:6px}
+.upload-icon{font-size:2.5rem;opacity:.3;margin-bottom:8px}
+.upload-text{font-size:.82rem;color:var(--gold2);margin-bottom:4px}
+.upload-hint{font-size:.67rem;color:var(--dim)}
+input[type=file]{display:none}
+
+/* ═══ LANGUAGE PICKER ═══ */
+.fam-chips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.fam-chip{font-size:.58rem;padding:3px 9px;border-radius:12px;cursor:pointer;font-family:var(--mono);border:1px solid var(--border);color:var(--muted);background:transparent;transition:all .2s}
+.fam-chip:hover,.fam-chip.on{background:rgba(200,146,42,0.14);color:var(--gold2);border-color:var(--border2)}
+.lang-list-wrap{max-height:145px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;margin-bottom:9px}
+.lang-item{display:flex;justify-content:space-between;align-items:center;padding:5px 10px;cursor:pointer;font-size:.72rem;transition:background .15s}
+.lang-item:hover,.lang-item.on{background:rgba(200,146,42,0.09)}
+.lang-tag{font-size:.52rem;padding:1px 6px;border-radius:6px;font-family:var(--mono)}
+.sel-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:9px;min-height:18px}
+.sel-chip{display:flex;align-items:center;gap:3px;font-size:.6rem;padding:2px 7px;border-radius:10px;background:rgba(200,146,42,0.1);color:var(--gold2);border:1px solid var(--border2);font-family:var(--mono)}
+.sel-chip span.rm{cursor:pointer;opacity:.6;margin-left:2px}
+
+/* ═══ MODE GRID ═══ */
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:7px;margin-bottom:1rem}
+.mode-card{background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;padding:.7rem .75rem;cursor:pointer;transition:all .2s;text-align:center}
+.mode-card:hover,.mode-card.on{background:rgba(200,146,42,0.1);border-color:var(--border2)}
+.mode-icon{font-size:17px;margin-bottom:3px}
+.mode-name{font-size:.66rem;font-weight:700;color:var(--text)}
+.mode-card.on .mode-name{color:var(--gold2)}
+.mode-desc{font-size:.58rem;color:var(--muted);margin-top:2px}
+
+/* ═══ RESULT BOX ═══ */
+.result-box{background:rgba(0,0,0,0.65);border:1px solid var(--border2);border-radius:var(--radius);margin-top:13px}
+.result-hdr{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;border-bottom:1px solid var(--border)}
+.result-label{font-size:.6rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono)}
+.result-btns{display:flex;gap:7px}
+.result-pre{padding:1rem 1.1rem;font-family:var(--mono);font-size:.7rem;color:#c0b8a0;line-height:1.8;white-space:pre-wrap;word-break:break-word;max-height:700px;overflow-y:auto}
+.result-footer{padding:9px 13px;border-top:1px solid rgba(200,146,42,0.1);display:flex;gap:18px}
+.result-stat{display:flex;flex-direction:column}
+.result-stat-n{font-size:.9rem;color:var(--gold2)}
+.result-stat-l{font-size:.56rem;color:var(--dim);font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em}
+
+/* ═══ ERRORS / ALERTS ═══ */
+.err-box{background:rgba(180,40,40,0.12);border:1px solid rgba(180,40,40,0.3);border-radius:6px;padding:.65rem .9rem;color:var(--red);font-size:.76rem;margin-top:9px}
+.info-box{background:rgba(26,92,58,0.12);border:1px solid rgba(26,92,58,0.3);border-radius:6px;padding:.65rem .9rem;color:var(--green);font-size:.76rem;margin-top:5px}
+.warn-box{background:rgba(200,146,42,0.08);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:.75rem .9rem;font-size:.78rem;color:var(--muted);margin-bottom:.9rem;line-height:1.65}
+.warn-box b{color:var(--text)}
+
+/* ═══ PROGRESS ═══ */
+.progress{display:flex;align-items:center;gap:10px;font-size:.73rem;color:var(--gold2);font-family:var(--mono);margin-top:8px;min-height:22px}
+.spinner{width:14px;height:14px;border:2px solid var(--gold3);border-top-color:var(--gold2);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ═══ TABLES ═══ */
+table{width:100%;border-collapse:collapse;font-size:.71rem}
+th{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:6px 8px;text-align:left;border-bottom:1px solid var(--border2);font-family:var(--mono);background:rgba(0,0,0,0.2)}
+td{padding:6px 8px;border-bottom:1px solid rgba(200,146,42,0.08);color:var(--muted);vertical-align:top}
+tr:hover td{background:rgba(200,146,42,0.04)}
+td:first-child{color:var(--gold2);font-family:var(--font)}
+.pill{display:inline-block;font-size:.52rem;padding:1px 6px;border-radius:7px;font-family:var(--mono)}
+.pill-mod{background:#1a3a5c;color:var(--blue)}
+.pill-cls{background:#1a3a1a;color:var(--green)}
+.pill-anc{background:#3a2a0a;color:var(--gold2)}
+.pill-unk{background:#3a1a1a;color:var(--red)}
+.pill-cst{background:#1a1a3a;color:var(--purple)}
+.pill-sol{background:#0a3020;color:var(--green)}
+
+/* ═══ CROSS ROWS ═══ */
+.cross-row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(200,146,42,0.1)}
+.cross-row:last-child{border-bottom:none}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.row-title{font-size:.8rem;color:var(--text);margin-bottom:2px;font-weight:600}
+.row-body{font-size:.72rem;color:var(--muted);line-height:1.5}
+
+/* ═══ API KEY PANEL ═══ */
+.api-panel{background:rgba(200,146,42,0.06);border:1px solid var(--border2);border-radius:8px;padding:1rem 1.1rem;margin-bottom:1rem}
+.api-stored{display:flex;align-items:center;gap:8px;font-size:.74rem;color:var(--green)}
+.api-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+
+/* ═══ HIEROGLYPH GRID ═══ */
+.glyph-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(60px,1fr));gap:6px;margin-bottom:1rem;max-height:300px;overflow-y:auto}
+.glyph-cell{background:rgba(0,0,0,0.4);border:1px solid var(--border);border-radius:6px;padding:.5rem .3rem;text-align:center;cursor:pointer;transition:all .2s;font-size:.95rem}
+.glyph-cell:hover,.glyph-cell.sel{border-color:var(--gold);background:rgba(200,146,42,0.1)}
+.glyph-gard{font-size:.55rem;color:var(--muted);font-family:var(--mono);margin-top:2px}
+.glyph-mean{font-size:.52rem;color:var(--green);margin-top:1px}
+
+/* ═══ FABRICIUS SECTION ═══ */
+.fab-steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:1rem}
+.fab-step{background:rgba(0,0,0,0.35);border:1px solid var(--border);border-radius:8px;padding:.75rem .8rem;text-align:center}
+.fab-step-num{font-size:1.4rem;color:var(--gold);font-family:var(--font);margin-bottom:4px}
+.fab-step-name{font-size:.68rem;color:var(--text);font-weight:600;margin-bottom:3px}
+.fab-step-desc{font-size:.6rem;color:var(--muted)}
+
+/* ═══ HISTORY ═══ */
+.hist-item{border:1px solid var(--border);border-radius:8px;padding:.85rem 1rem;margin-bottom:.75rem;background:rgba(0,0,0,0.25)}
+.hist-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.hist-meta{font-size:.66rem;color:var(--dim);font-family:var(--mono)}
+.hist-pre{font-family:var(--mono);font-size:.67rem;color:#b0a898;line-height:1.7;white-space:pre-wrap;word-break:break-word;max-height:180px;overflow-y:auto;background:rgba(0,0,0,0.3);border-radius:5px;padding:.7rem}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr}.row2,.row3{grid-template-columns:1fr}}
+@media(max-width:600px){.header-title{font-size:1.1rem}.mode-grid{grid-template-columns:repeat(2,1fr)}.fab-steps{grid-template-columns:repeat(2,1fr)}}
+
+/* ═══ OFFLINE NOTICE ═══ */
+.offline-bar{display:none;background:rgba(139,26,42,0.3);border-bottom:1px solid rgba(139,26,42,0.5);padding:6px;text-align:center;font-size:.65rem;color:var(--red);font-family:var(--mono)}
+body.offline .offline-bar{display:block}
+</style>
+</head>
+<body>
+
+<div class="offline-bar">⚠ You are offline — Knowledge base still works. AI extraction requires internet + API key.</div>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <div class="header-title">⬡ Universal Ancient Language Intelligence — OMEGA v4</div>
+  <div class="header-sub">Muhammad Zubair · Bahria University Islamabad · Digital Humanities & Cross-Religious Research · 2026</div>
+  <div class="badges">
+    <span class="badge">Indus Script</span>
+    <span class="badge">Enochian</span>
+    <span class="badge">Soyga / Loagaeth</span>
+    <span class="badge">Voynich MS</span>
+    <span class="badge">Hildegard LI</span>
+    <span class="badge">Angel Runic</span>
+    <span class="badge dim">Hungarian Rovás</span>
+    <span class="badge dim">Hebrew Pictographic</span>
+    <span class="badge dim">Fabricius / Hieroglyphs</span>
+    <span class="badge dim">50+ Scripts · 120+ Languages</span>
+    <span class="badge dim">Offline PWA</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- STAT ROW -->
+  <div class="g4" style="margin-bottom:1.2rem">
+    <div class="stat-card"><div class="stat-num">50+</div><div class="stat-lbl">Writing systems</div></div>
+    <div class="stat-card"><div class="stat-num">120+</div><div class="stat-lbl">Languages</div></div>
+    <div class="stat-card"><div class="stat-num">PWA</div><div class="stat-lbl">Install offline</div></div>
+    <div class="stat-card"><div class="stat-num">∞</div><div class="stat-lbl">Research potential</div></div>
+  </div>
+
+  <!-- MAIN NAV TABS -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('extract',this)">⬡ Extract & Analyse</button>
+    <button class="nav-tab" onclick="switchTab('alphabet',this)">🔠 Alphabet Decoder</button>
+    <button class="nav-tab" onclick="switchTab('fabricius',this)">𓂀 Fabricius / Hieroglyphs</button>
+    <button class="nav-tab" onclick="switchTab('knowledge',this)">📚 Knowledge Base</button>
+    <button class="nav-tab" onclick="switchTab('settings',this)">⚙ Settings</button>
+    <button class="nav-tab" onclick="switchTab('history',this)" id="hist-tab">🕐 History</button>
+  </div>
+
+  <!-- ═══ EXTRACT TAB ═══ -->
+  <div id="tab-extract" class="panel active">
+    <!-- API Key inline -->
+    <div class="api-panel" id="api-status-extract">
+      <div id="api-ok" style="display:none" class="api-stored">
+        <div class="api-dot"></div> API key stored — AI extraction active
+        <button class="btn-sm" style="margin-left:auto" onclick="testConnection()">Test Connection</button>
+        <button class="btn-sm" onclick="clearKey()">Clear</button>
+      </div>
+      <div id="api-missing">
+        <label class="lbl">Anthropic API Key (stored locally — never sent anywhere except api.anthropic.com)</label>
+        <div style="display:flex;gap:8px">
+          <input type="password" id="api-key-input" placeholder="sk-ant-..." style="margin-bottom:0;flex:1">
+          <button class="btn-outline" onclick="saveKey()">Save</button>
+        </div>
+        <div style="font-size:.63rem;color:var(--dim);margin-top:5px;font-family:var(--mono);line-height:1.6">
+          1. Get FREE key at console.anthropic.com → API Keys<br>
+          2. Paste here (starts with sk-ant-...) → click Save<br>
+          3. Stored only in your browser's localStorage<br>
+          4. Sent only to api.anthropic.com — never elsewhere
+        </div>
+      </div>
+    </div>
+
+    <!-- Input mode sub-tabs -->
+    <div class="sub-tabs">
+      <button class="sub-tab active" data-input-mode="text" onclick="switchInput('text',this)">📝 Text Input</button>
+      <button class="sub-tab" data-input-mode="image" onclick="switchInput('image',this)">🖼 Image / Seal</button>
+      <button class="sub-tab" data-input-mode="manuscript" onclick="switchInput('manuscript',this)">📜 Manuscript Scan</button>
+    </div>
+
+    <!-- Text input -->
+    <div id="input-text">
+      <label class="lbl">Paste text — any script, language, or system</label>
+      <textarea id="txt-input" placeholder="Examples:&#10;• Voynich EVA: daiin qol chor daiin otchey qotchedy&#10;• Enochian: OL SONF VORSG GOHO IAD BALT LANSH&#10;• Indus: IS-267 IS-099 IS-342 (sign ID sequence)&#10;• Hebrew: שְׁמַע יִשְׂרָאֵל יְהוָה אֱלֹהֵינוּ&#10;• Arabic: بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ&#10;• Hildegard: Aizniz Aieganz Crizanz Maiz&#10;• Hungarian Rovás: transliteration or description&#10;• Cuneiform transliteration: AN ZU NUN GI4-A&#10;• Any other script, language or cipher…"></textarea>
+    </div>
+
+    <!-- Image input -->
+    <div id="input-image" style="display:none">
+      <label class="lbl">Upload seal, inscription, tablet, or any image</label>
+      <div class="upload-zone" id="img-zone" onclick="document.getElementById('img-file').click()"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event,'img')">
+        <div id="img-preview">
+          <div class="upload-icon">⊞</div>
+          <div class="upload-text">Drop image here or click to upload</div>
+          <div class="upload-hint">Indus seals · Enochian scripts · Cuneiform tablets · Hieroglyphs · Voynich pages · Angel Runic · Any inscription</div>
+        </div>
+      </div>
+      <input type="file" id="img-file" accept="image/*" onchange="loadImg(this,'img')">
+    </div>
+
+    <!-- Manuscript input -->
+    <div id="input-manuscript" style="display:none">
+      <label class="lbl">Upload manuscript scan (Sloane MS, Dead Sea Scrolls, papyrus, vellum)</label>
+      <div class="upload-zone" id="ms-zone" onclick="document.getElementById('ms-file').click()"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event,'ms')">
+        <div id="ms-preview">
+          <div class="upload-icon">▨</div>
+          <div class="upload-text">Drop manuscript image or click to upload</div>
+          <div class="upload-hint">Sloane MS 3189 · Beinecke MS 408 · Riesencodex · Dead Sea Scrolls · Ge'ez manuscripts</div>
+        </div>
+      </div>
+      <input type="file" id="ms-file" accept="image/*" onchange="loadImg(this,'ms')">
+      <input type="text" id="ms-context" placeholder="Context: e.g. Sloane MS 3189, Leaf 7a — Enochian 49×49 grid, Dee/Kelley 1583-84">
+    </div>
+
+    <!-- Research mode -->
+    <label class="lbl" style="margin-top:5px">Research Mode</label>
+    <div class="mode-grid" id="mode-grid"></div>
+
+    <!-- Language picker -->
+    <label class="lbl">Script Family Filter</label>
+    <div class="fam-chips" id="fam-chips"></div>
+    <input type="text" id="lang-search" placeholder="Search any language, script, or writing system…" oninput="filterLangs()">
+    <div class="lang-list-wrap" id="lang-list"></div>
+    <div class="sel-chips" id="sel-chips"></div>
+
+    <!-- Output options -->
+    <div class="row3">
+      <div>
+        <label class="lbl">Output Format</label>
+        <select id="out-format">
+          <option>Academic Markdown</option>
+          <option>Structured JSON</option>
+          <option>Annotated Transcript</option>
+          <option>Linguistic Analysis Report</option>
+          <option>CSV Table</option>
+          <option>Plain Text</option>
+        </select>
+      </div>
+      <div>
+        <label class="lbl">Analysis Depth</label>
+        <select id="depth">
+          <option>Quick — script ID only</option>
+          <option>Standard — extract & identify</option>
+          <option>Deep — morphology & grammar</option>
+          <option selected>Expert — cipher & unknown</option>
+          <option>Scholarly — full APA edition</option>
+        </select>
+      </div>
+      <div>
+        <label class="lbl">Language (Claude model)</label>
+        <select id="resp-lang">
+          <option value="English">English</option>
+          <option value="Urdu">Urdu (اردو)</option>
+          <option value="Arabic">Arabic (العربية)</option>
+          <option value="Hindi">Hindi (हिन्दी)</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-run" id="run-btn" onclick="runExtraction()">⬡  Extract & Analyse All Scripts</button>
+    <div class="progress" id="progress" style="display:none"><div class="spinner"></div><span id="prog-text">Processing…</span></div>
+    <div id="ext-error"></div>
+    <div id="ext-result"></div>
+  </div>
+
+  <!-- ═══ ALPHABET DECODER TAB ═══ -->
+  <div id="tab-alphabet" class="panel">
+    <div class="warn-box"><b>Alphabet & Glyph Decoder:</b> Enter individual letters, signs, or sequences. Get phoneme values, Unicode codes, cipher manipulations (Tucker/VMS), and cross-script parallels for every character. Works offline — knowledge base built-in.</div>
+    <div class="g2">
+      <div>
+        <label class="lbl">Enter glyphs / transliteration / Unicode points</label>
+        <textarea id="alph-input" style="min-height:90px" placeholder="Examples:&#10;• daiin qol chor (Voynich EVA)&#10;• OD IAD BALT ZACAR (Enochian)&#10;• ℵ ב ג ד ה (Hebrew)&#10;• ا ب ت ث ج (Arabic)&#10;• Aizniz Aieganz (Hildegard)&#10;• ᚠᚢᚦᚨᚱᚲ (Elder Futhark)&#10;• IS-267 IS-099 IS-342 (Indus IDs)&#10;• 𓂀 𓆙 𓃀 (Unicode hieroglyphs)"></textarea>
+      </div>
+      <div>
+        <label class="lbl">Target script</label>
+        <select id="alph-script">
+          <option value="">Auto-detect</option>
+          <option>Indus Valley Script</option>
+          <option>Enochian</option>
+          <option>Voynich MS (Tucker cipher)</option>
+          <option>Hildegard Lingua Ignota</option>
+          <option>Angel Runic</option>
+          <option>Hungarian Rovás</option>
+          <option>Ancient Hebrew (pictographic)</option>
+          <option>Egyptian Hieroglyphic</option>
+          <option>Sumerian cuneiform</option>
+          <option>Linear B</option>
+          <option>Mayan Glyphs</option>
+          <option>Arabic</option>
+          <option>Sanskrit</option>
+          <option>Elder Futhark Runes</option>
+          <option>Ge'ez</option>
+        </select>
+        <label class="lbl">Output format</label>
+        <select id="alph-format">
+          <option>Alphabet Table (glyph → phoneme → Unicode)</option>
+          <option>Cipher Analysis (manipulations)</option>
+          <option>Academic Markdown</option>
+          <option>JSON</option>
+        </select>
+        <button class="btn-run" onclick="runAlphabetDecode()" style="margin-top:5px">🔠  Decode Alphabet / Glyphs</button>
+      </div>
+    </div>
+    <div class="progress" id="alph-progress" style="display:none"><div class="spinner"></div><span id="alph-prog">Decoding…</span></div>
+    <div id="alph-error"></div>
+    <div id="alph-result"></div>
+
+    <!-- OFFLINE QUICK REFERENCE TABLES -->
+    <div class="card" style="margin-top:1rem">
+      <label class="lbl" style="margin-bottom:8px">Quick Reference — Voynich Tucker Cipher (offline)</label>
+      <table>
+        <thead><tr><th>Latin</th><th>Cipher Operation</th><th>EVA Code</th><th>Notes</th></tr></thead>
+        <tbody id="tucker-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <label class="lbl" style="margin-bottom:8px">Quick Reference — Enochian Alphabet (offline)</label>
+      <table>
+        <thead><tr><th>Letter Name</th><th>Sound</th><th>Key Words</th><th>Function</th></tr></thead>
+        <tbody id="enoch-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <label class="lbl" style="margin-bottom:8px">Quick Reference — Ancient Hebrew Pictographic Chain (offline)</label>
+      <table>
+        <thead><tr><th>Letter</th><th>Pictograph</th><th>Meaning</th><th>Sound</th><th>Evolution</th></tr></thead>
+        <tbody id="heb-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ FABRICIUS TAB ═══ -->
+  <div id="tab-fabricius" class="panel">
+    <div class="warn-box">
+      <b>Google Fabricius Workbench Integration:</b> The Fabricius project (Google Arts &amp; Culture × Macquarie University × Ubisoft) is the world's first ML-powered Egyptian hieroglyph decoder. Its workflow, Gardiner code database, and Berlin-Brandenburg Academy translations are integrated into this engine. The live workbench is at <a href="https://fabriciusworkbench.withgoogle.com" target="_blank" style="color:var(--gold2)">fabriciusworkbench.withgoogle.com</a> — use that for full ML glyph classification from images. This engine provides the AI-powered translation and cross-script analysis layer.
+    </div>
+
+    <!-- Fabricius workflow steps -->
+    <label class="lbl">Fabricius Workflow — 5 Steps</label>
+    <div class="fab-steps">
+      <div class="fab-step"><div class="fab-step-num">1</div><div class="fab-step-name">Import Image</div><div class="fab-step-desc">Upload photo of inscription, stele, papyrus, or cartouche</div></div>
+      <div class="fab-step"><div class="fab-step-num">2</div><div class="fab-step-name">Facsimile</div><div class="fab-step-desc">Trace glyphs using pan/zoom/threshold tools</div></div>
+      <div class="fab-step"><div class="fab-step-num">3</div><div class="fab-step-name">Segment</div><div class="fab-step-desc">Cluster Analysis API extracts ordered glyph sequence</div></div>
+      <div class="fab-step"><div class="fab-step-num">4</div><div class="fab-step-name">Classify</div><div class="fab-step-desc">AutoML assigns Gardiner codes (A1, B1, C1… G17, N1…)</div></div>
+      <div class="fab-step"><div class="fab-step-num">5</div><div class="fab-step-name">Translate</div><div class="fab-step-desc">Berlin-Brandenburg dictionary maps Gardiner → meanings</div></div>
+    </div>
+
+    <!-- Gardiner code input + AI translation -->
+    <div class="card card-gold">
+      <label class="lbl">Enter Gardiner Codes for AI translation &amp; analysis</label>
+      <input type="text" id="gardiner-input" placeholder="e.g. G17 N35 N35 X1 O1 (Gardiner codes separated by spaces)">
+      <div class="warn-box" style="font-size:.7rem">
+        <b>Gardiner Sign List:</b> A=man/people, B=woman, C=deity, D=body parts, E=mammals, F=parts of mammals, G=birds, H=parts of birds, I=reptiles, K=fish, L=invertebrates, M=plants, N=sky/earth/water, O=buildings, P=ships, Q=furniture, R=temple furniture, S=crowns/dress, T=warfare, U=agriculture, V=rope/baskets, W=vessels, X=bread, Y=writing, Z=strokes, Aa=unclassified
+      </div>
+      <div class="row2">
+        <div>
+          <label class="lbl">Translation mode</label>
+          <select id="gardiner-mode">
+            <option>Full translation + phonetic analysis</option>
+            <option>Sign-by-sign breakdown</option>
+            <option>Cross-religious parallels</option>
+            <option>Academic Egyptological report</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-end">
+          <button class="btn-run" onclick="translateGardiner()">𓂀  Translate Hieroglyphs</button>
+        </div>
+      </div>
+      <div class="progress" id="gard-progress" style="display:none"><div class="spinner"></div><span>Translating hieroglyphs…</span></div>
+      <div id="gard-result"></div>
+    </div>
+
+    <!-- Gardiner Quick Reference -->
+    <div class="card">
+      <label class="lbl">Gardiner Sign Reference — Key Categories (offline)</label>
+      <div class="glyph-grid" id="gardiner-grid"></div>
+    </div>
+
+    <!-- Cross-script Egyptian parallels -->
+    <div class="card">
+      <label class="lbl">Egyptian → Cross-Script Parallels (offline knowledge)</label>
+      <div id="egypt-parallels"></div>
+    </div>
+  </div>
+
+  <!-- ═══ KNOWLEDGE BASE TAB ═══ -->
+  <div id="tab-knowledge" class="panel">
+    <!-- Sub-tabs -->
+    <div class="sub-tabs">
+      <button class="sub-tab active" onclick="switchKB('overview',this)">Overview</button>
+      <button class="sub-tab" onclick="switchKB('scripts',this)">All Scripts</button>
+      <button class="sub-tab" onclick="switchKB('method',this)">Methodology</button>
+      <button class="sub-tab" onclick="switchKB('divine',this)">Cross-Religious</button>
+      <button class="sub-tab" onclick="switchKB('refs',this)">References</button>
+    </div>
+
+    <div id="kb-overview" class="kb-panel">
+      <div class="card card-gold">
+        <label class="lbl">Full Knowledge Base — Embedded in Every AI Call</label>
+        <div class="result-pre" id="kb-text" style="max-height:600px;background:rgba(0,0,0,0.4);border-radius:8px;padding:1rem"></div>
+        <div class="btn-row"><button class="btn-sm" onclick="copyKB()">Copy Full KB</button></div>
+      </div>
+    </div>
+
+    <div id="kb-scripts" class="kb-panel" style="display:none">
+      <div class="card"><label class="lbl">Complete Script Database</label>
+        <table><thead><tr><th>Script</th><th>Era</th><th>Status</th><th>Signs</th><th>Key Feature</th><th>Confidence</th></tr></thead>
+        <tbody id="scripts-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <div id="kb-method" class="kb-panel" style="display:none">
+      <div class="card"><label class="lbl">10-Step Decipherment Protocol</label><div id="method-list"></div></div>
+    </div>
+
+    <div id="kb-divine" class="kb-panel" style="display:none">
+      <div class="card"><label class="lbl">Cross-Religious Divine Name Cognate Chain</label><div id="divine-list"></div></div>
+      <div class="card"><label class="lbl">Sacred Number "Seven" Across Traditions</label><div id="seven-list"></div></div>
+      <div class="card"><label class="lbl">Creation / Beginning Root Across Traditions</label><div id="creation-list"></div></div>
+    </div>
+
+    <div id="kb-refs" class="kb-panel" style="display:none">
+      <div class="card"><label class="lbl">Scholarly References — APA 7th Edition</label><div id="refs-list"></div></div>
+    </div>
+  </div>
+
+  <!-- ═══ SETTINGS TAB ═══ -->
+  <div id="tab-settings" class="panel">
+    <div class="card">
+      <label class="lbl">API Configuration</label>
+      <div class="warn-box"><b>Security:</b> Your API key is stored only in your browser's localStorage. It is sent only to api.anthropic.com — never to any other server. This page runs entirely in your browser with no backend.</div>
+      <label class="lbl">Anthropic API Key</label>
+      <div style="display:flex;gap:8px">
+        <input type="password" id="api-key-settings" placeholder="sk-ant-...">
+        <button class="btn-outline" onclick="saveKey()">Save</button>
+        <button class="btn-outline" style="color:var(--red);border-color:rgba(180,40,40,0.4)" onclick="clearKey()">Clear</button>
+      </div>
+      <div id="key-status" class="info-box" style="display:none">✓ API key saved</div>
+    </div>
+
+    <div class="card">
+      <label class="lbl">Install as Offline App (PWA)</label>
+      <div class="warn-box"><b>How to install:</b> In Chrome/Edge: click the install button in the address bar, or open the menu → "Install OMEGA". In Safari (iPhone/iPad): tap Share → "Add to Home Screen". Once installed, the app works fully offline — knowledge base, alphabet decoder, and all reference tables. AI extraction requires internet + API key.</div>
+      <button class="btn-outline" onclick="installPWA()" id="install-btn" style="display:none">Install App</button>
+      <div id="install-info" style="font-size:.73rem;color:var(--muted);margin-top:8px">Use your browser's install option to add this to your home screen or desktop.</div>
+    </div>
+
+    <div class="card">
+      <label class="lbl">Export / Import Research Data</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-outline" onclick="exportHistory()">Export History (JSON)</button>
+        <button class="btn-outline" onclick="exportKB()">Export Knowledge Base (MD)</button>
+        <button class="btn-outline" onclick="document.getElementById('import-file').click()">Import History</button>
+      </div>
+      <input type="file" id="import-file" accept=".json" onchange="importHistory(this)" style="display:none">
+    </div>
+
+    <div class="card">
+      <label class="lbl">About OMEGA v4</label>
+      <div style="font-size:.74rem;color:var(--muted);line-height:1.7">
+        <b style="color:var(--text)">OMEGA v4</b> — Universal Ancient Language Intelligence Engine<br>
+        <b style="color:var(--text)">Researcher:</b> Muhammad Zubair, Clinical Psychologist, Bahria University Islamabad<br>
+        <b style="color:var(--text)">Purpose:</b> Digital humanities research, cross-religious truth-finding, ancient script decipherment<br>
+        <b style="color:var(--text)">AI engine:</b> Claude (Anthropic) — claude-sonnet-4-20250514<br>
+        <b style="color:var(--text)">Fabricius integration:</b> Google Arts &amp; Culture × Macquarie University × Ubisoft<br>
+        <b style="color:var(--text)">Version:</b> 4.0 — April 2026<br>
+        <b style="color:var(--text)">Architecture:</b> Single-file PWA — zero dependencies, works offline<br>
+        <b style="color:var(--text)">Honesty rule:</b> All uncertain sections marked [UNDECIPHERED]. Never fabricated translations.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HISTORY TAB ═══ -->
+  <div id="tab-history" class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+      <label class="lbl" style="margin:0">Analysis History — Saved Locally</label>
+      <div style="display:flex;gap:7px">
+        <button class="btn-sm" onclick="exportHistory()">Export</button>
+        <button class="btn-sm" onclick="clearHistory()" style="color:var(--red)">Clear All</button>
+      </div>
+    </div>
+    <div id="history-list"><div style="font-size:.76rem;color:var(--dim)">No analyses yet. Run an extraction to see results here.</div></div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+// OMEGA v4 — COMPLETE OFFLINE PWA JAVASCRIPT
+// ═══════════════════════════════════════════════════════
+
+// ─── MASTER KNOWLEDGE BASE ──────────────────────────────
+const KB = `
+INDUS VALLEY SCRIPT: 417 signs (M77 concordance), 3,700+ inscriptions, avg 5.17 signs. IS-342(freq=650,10%)=nominative suffix -m [PROBABLE,78%]. IS-267(fish)=mīn=star via rebus (Parpola 1994 homophone principle). IS-391(star)=vāṉ/mīn=divine opener. IS-099(freq=425)=-um additive particle. IS-176=-iṉ genitive "of". IS-211=-il locative "at/in". IS-059=-ē emphatic. Dravidian hypothesis (SOV order, agglutinative, post-positional). Zipf: a=15.39, b=2.59 (linguistic distribution confirmed). Rao 2009 conditional entropy = language-like. Declension test proves case suffixes: same root before IS-342/IS-176/IS-211. Brahui = only living Dravidian in Indus heartland. 15 pictographic anchors. No bilingual inscription found (2026). Sources: Parpola 1994, Mahadevan 1977, Rao 2009.
+
+ENOCHIAN (DEE/KELLEY 1583-84): 21 letters: Un(A),Pe(B),Veh(C/K),Gon(D),Or(E),Med(F),Mals(G),Tal(H),Gal(I/Y),Urs(K),Don(R),Fam(S),Vran(N),Graph(O),Tal2(P),Ged(G/J),Gisg(T),Mals2(U/V/W),Med2(X/Z). IC=0.082. Grammar: VSO,-O=genitive,-AX=participial,-ES=vocative,OD=connector(847×). 264 Tier-1 words: IAD(God),OL(I/command),SONF(reign),ZACAR(move/open),ZAMRAN(show thyself),NIIS(come),GANS(messenger),OR(light),OD(and),NA(no),NAX(negation),ALLA(totality),GRAA(moon),ADON(Lord),DOXA(glory),IAN(I AM),TARDEMAH(deep sleep),BALT(justice),VOOAN(truth),VONPH(wrath). Reversal pairs: DAM↔MAD,LOT↔TOL. 4 Watchtowers (Air=BATAIVAH,Fire=EDLPRNAA,Water=RAAGIOSL,Earth=ICZHIHAL). 30 Aethyrs,91 Governors. Sigillum Dei Aemeth: 7 heptagonal rings,pentagram,40 outer angels. Sources: Reeds 1996,Harkness 1999,Peterson 2003,Laycock 1994,Casaubon 1659.
+
+LIBER LOAGAETH (SLOANE MS 3189): 48 leaves,49×49 grids (2,401 cells/leaf). IC=0.082. Letter A=18.10%. Translation ceiling ~18% (Leaf 1a). Angels explicitly refused leaf-by-leaf translation in Dee sessions. DIFFERENT method from Soyga — unknown. Dee spent 20+ years. NEVER claim fully decoded.
+
+BOOK OF SOYGA (ALDARAIA): 36 tables,36×36,one per angel. Names: ADAM,IZED,ILEF,IRAG,IHAL,IZED,IGAB,IMAL,IPAM,IABS,ILRI,IMAC,IPHA,ILEC,IIAC,IZAZ,ILEL,IAIA,IZIR,IPHO,INAL,IMAP,ISYP,INAY. Row-1 seed=angel name repeated. Formula (Reeds 1996): cell[r][c]=(Trithemius(prev)+above) mod 23. 100% accuracy on Soyga. ~5% on Loagaeth=different method confirmed. Dee spent 20 years on this.
+
+VOYNICH MANUSCRIPT (BEINECKE 408,c.1404-38 CE): 37,919 words,8,114 unique,avg word 5.77. IC=0.027 (PARADOX:below random 0.038,yet Zipf-perfect). Top words: daiin(892),qol(654),ol(589),chor(412),dain(382). Sections: Herbal,Astronomical,Biological,Pharmaceutical,Stars,Recipes. Tucker/Tucker 2013 = Middle English Old Law Hands cipher. ALL 26 manipulations: a=flipped+reversed(U+FF417),b=stem removed(U+FF447),c=top removed(U+FF400),d=stem moved to top(MISSING),e=stem removed(U+FF414),f=middle stem removed,g=upper+flip(U+FF40C),h=alter stem(U+FF404),i=connect bottom(U+FF41A),k=remove right(U+FF408),l=remove bottom+double(U+FF48A),m=upside down(U+FF505),n=upside down(U+FF501),p=add loop+stem(U+FF420),q=upside down+partial circle(U+FF4B1),r=split in half(U+FF403),s=none(U+FF409),t=rotate180+reverse(U+FF422),u=connect top(U+FF4C0),v=upside down+reverse curve(U+FF4C1),w=remove curves(U+FF41B),x=remove bottom(EVA+91),y=remove stem+flip(U+FF5B9),z=flip top(U+FF40F). Minim sequences:aiin=a+i+i+n,NOT always preceded by EVA-d. Sources:Tucker 2013,Zandbergen,Currier 1976.
+
+HILDEGARD OF BINGEN LINGUA IGNOTA (c.1150 CE): First constructed language in Western history. ~900 glossed nouns (Riesencodex,Wiesbaden HS 2,c.1190-1200). 23 Litterae Ignotae letters (1:1 Latin substitution). Grammar=pure Latin (vocabulary replacement only). Key vocab: Aizniz(God),Aieganz(angel),Crizanz(Christ),Maiz(man),Vilbez(woman),Galderich(jaundice),Loibenz(lion),Zilzibriz(wax),Bursiol(eye),Orechons(mouth),Linschiol(Latin language). MSS: Riesencodex(primary),Berlin MS Lat.Oct.252,Ghent fragment. Scholar: Sarah Higley 2007.
+
+ANGEL RUNIC (ARCHAIC SPIRIFORM): Curvilinear/spiral-based angelic script. Every letter=circles/spirals. 26 base letters + digraphs: bb,ch,ff,gg,ph,rr,sh,th,tt. Divine symbols: God(6-pt star),Devil(inv.pentagram),Fire(triple flame),Wind(3 waves),Earth(cross-in-square),Water(3 wavy lines),Love(heart),Pray(hands),Christ(cross),Trinity(Ψ/trident),Wing/Angel(Ψ),Brother of Adam(△),Sister of Eve(▽),Holy Legion(⚔). English/Latin phonology. Ceremonial/esoteric.
+
+HUNGARIAN ROVÁS (FISCHER KÁROLY ANTAL 1889): RTL carved script,4th-18th c. CE. 12 regional variants. CRITICAL: Hungarian s=English SH! Hungarian sz=English S! Unique signs: cs(ch),gy(dy),ly(palatal-l),ny(ñ),ty(palatal-t),zs(zh). Standard: Transylvanian Szekler. Inscriptions: Nickelsburg(c.1490),Bologna Rovás(1515),Énlaka(1668). Revival since 1980s.
+
+ANCIENT HEBREW (PICTOGRAPHIC CHAIN): 4 characteristics: form(pictographic)+meaning(mnemonic)+name(syllabic)+sound(phonetic). 22 letters: aleph(ox/A),beth(tent/B),gimel(camel/G),dalet(door/D),heh(window/H),waw(nail/W/V),zayin(weapon/Z),chet(fence/Ch),tet(basket/T),yod(arm/Y),kaph(palm/K),lamed(staff/L),mem(water/M),nun(fish/N),samekh(thorn/S),ayin(eye/O/Ai),peh(mouth/P),tsade(trail/Ts),qoph(head/Q),resh(head/R),shin(teeth/Sh),taw(mark/T). Evolution: Pictographic→Phoenician→Greek→Latin→Modern. Samaritans preserved original. RTL from ~500 BCE. Dead Sea Scrolls show mixed scripts. Source: project PDF + Benner 2004.
+
+GOOGLE FABRICIUS WORKBENCH (googleartsculture/workbench): Open-source Angular tool for Egyptian hieroglyphs. APIs: classifier-automl (Google Cloud AutoML Vision assigns Gardiner codes),cluster-analysis (extracts ordered glyph sequence from image),translation (Gardiner codes→Berlin-Brandenburg Academy dictionary CC BY-SA 4.0). Live: fabriciusworkbench.withgoogle.com. Named after Georg Fabricius (father of epigraphy). Partners: Macquarie University,Ubisoft,Psycle Interactive. Gardiner Sign List: 750+ signs organized A-Aa. Key categories: A(man),B(woman),C(deity),D(body),G(birds),M(plants),N(sky/earth/water),O(buildings).
+
+GE'EZ/ETHIOPIC: Semitic abugida,231 syllabic characters (33 consonants×7 vowels). L-to-R. Ethiopian/Eritrean Orthodox liturgy. 15th-17th c. MSS: geometric cross-carpet illumination,red rubrics.
+
+ARABIC/ANDALUSI/URDU/FARSI/PASHTO: Arabic=28 letters,RTL abjad,trilateral root (k-t-b→kitāb/kātib/maktaba). Andalusi=medieval Iberian dialect (from project PDF). Urdu=Arabic-Persian script,SOV. Farsi=Indo-European NOT Semitic. Pashto=retroflex series,Eastern Iranian.
+
+10-STEP DECIPHERMENT PROTOCOL: (1)Frequency analysis—dominant sign=grammatical (2)Positional S/M/E—consistent positions=markers (3)Pictographic anchor—signs=real objects (4)Rebus/homophone—fish sign for STAR because mīn=fish=star (5)Bilingual Rosetta—most powerful (6)IC—random=0.038,English=0.067,Enochian=0.082,VMS=0.027 (7)Zipf-Mandelbrot—all natural languages obey (8)Ventris grid—consonant×vowel matrix (9)K-means+PCA—cluster signs (10)Cross-script parallel—known script patterns→unknown.
+
+HONESTY RULE: Mark [UNDECIPHERED] always. CONFIRMED/PROBABLE/POSSIBLE/UNKNOWN. Never fabricate. Indus: no bilingual found (2026). Loagaeth ~18% max. VMS ~35% hypothesis. Indus ~15% anchored.
+
+CROSS-RELIGIOUS DIVINE NAME CHAIN: IAD(Enochian)→YHWH יהוה (Hebrew,root yhw=to be)→ALLAH الله (Arabic,Al+Ilah)→ALAHA ܐܠܗܐ (Aramaic/Syriac)→THEOS ΘΕΟΣ (Greek,PIE dhewbh)→DEVA देव (Sanskrit,PIE dyeu=sky/shine)→KADAVUL கடவுள் (Tamil,kada=transcend+ul=within)→AN (Sumerian,sky/heaven=divine).
+`;
+
+// ─── DATA ──────────────────────────────────────────────
+const MODES = [
+  {id:'cipher',icon:'🔐',name:'Cipher / Unknown',desc:'Voynich, Enochian, Indus, mystery scripts'},
+  {id:'manuscript',icon:'📜',name:'Manuscript',desc:'Dee diaries, Dead Sea, cuneiform'},
+  {id:'epigraphy',icon:'🗿',name:'Epigraphy',desc:'Stone, bone, seal, metal inscriptions'},
+  {id:'alphabet',icon:'🔠',name:'Alphabet / Glyph',desc:'Letter-by-letter identification'},
+  {id:'religious',icon:'✦',name:'Sacred Text',desc:'Scripture, prayer, invocation'},
+  {id:'comparative',icon:'⚖',name:'Cross-Script',desc:'Parallels across traditions'},
+  {id:'medical',icon:'⚕',name:'Medical / Botanical',desc:'Arabic plants, Unani, herbal MSS'},
+  {id:'fabricius',icon:'𓂀',name:'Fabricius / Egypt',desc:'Hieroglyphs, Gardiner codes'},
+  {id:'dh',icon:'🎓',name:'Digital Humanities',desc:'Full scholarly output'},
+  {id:'general',icon:'🔬',name:'General Research',desc:'Any document or image'},
+];
+
+const FAMILIES = [
+  'Auto-detect all','Zubair Research Scripts','Undeciphered Ancient',
+  'Constructed / Angelic','Modern European','Arabic & Semitic',
+  'South Asian','East Asian','African','Ancient Mediterranean',
+  'Ancient Near East','Ancient Egypt','Classical East Asia','Indic Classical',
+];
+
+const ALL_LANGS = [
+  {n:'Auto-Detect All',fam:'Auto-detect all',tag:'auto'},
+  {n:'Indus Valley Script',fam:'Zubair Research Scripts',tag:'unknown'},
+  {n:'Enochian (Angelical Language)',fam:'Zubair Research Scripts',tag:'constructed'},
+  {n:'Liber Loagaeth (49×49)',fam:'Zubair Research Scripts',tag:'constructed'},
+  {n:'Book of Soyga (Aldaraia)',fam:'Zubair Research Scripts',tag:'constructed'},
+  {n:'Voynich MS (EVA/Tucker)',fam:'Zubair Research Scripts',tag:'unknown'},
+  {n:'Hildegard Lingua Ignota',fam:'Zubair Research Scripts',tag:'constructed'},
+  {n:'Angel Runic (spiriform)',fam:'Zubair Research Scripts',tag:'constructed'},
+  {n:'Hungarian Rovás (12 variants)',fam:'Zubair Research Scripts',tag:'ancient'},
+  {n:'Ancient Hebrew (pictographic)',fam:'Zubair Research Scripts',tag:'ancient'},
+  {n:'Ge\'ez / Ethiopic',fam:'Zubair Research Scripts',tag:'classical'},
+  {n:'Andalusi Arabic (medieval)',fam:'Zubair Research Scripts',tag:'classical'},
+  {n:'Egyptian Hieroglyphic (Fabricius)',fam:'Zubair Research Scripts',tag:'ancient'},
+  {n:'Linear A (Minoan)',fam:'Undeciphered Ancient',tag:'unknown'},
+  {n:'Proto-Elamite',fam:'Undeciphered Ancient',tag:'unknown'},
+  {n:'Rongorongo',fam:'Undeciphered Ancient',tag:'unknown'},
+  {n:'Phaistos Disc',fam:'Undeciphered Ancient',tag:'unknown'},
+  {n:'Meroitic',fam:'Undeciphered Ancient',tag:'unknown'},
+  {n:'Rohonc Codex',fam:'Undeciphered Ancient',tag:'unknown'},
+  {n:'Celestial Alphabet (Agrippa)',fam:'Constructed / Angelic',tag:'constructed'},
+  {n:'Malachim',fam:'Constructed / Angelic',tag:'constructed'},
+  {n:'Theban alphabet',fam:'Constructed / Angelic',tag:'constructed'},
+  {n:'Elder Futhark Runes',fam:'Constructed / Angelic',tag:'ancient'},
+  {n:'Ogham',fam:'Constructed / Angelic',tag:'ancient'},
+  {n:'English',fam:'Modern European',tag:'modern'},
+  {n:'Middle English',fam:'Modern European',tag:'classical'},
+  {n:'Latin (Classical)',fam:'Modern European',tag:'classical'},
+  {n:'Medieval Latin',fam:'Modern European',tag:'classical'},
+  {n:'Ancient Greek',fam:'Modern European',tag:'classical'},
+  {n:'French / German / Spanish',fam:'Modern European',tag:'modern'},
+  {n:'Russian',fam:'Modern European',tag:'modern'},
+  {n:'Arabic (Modern Standard)',fam:'Arabic & Semitic',tag:'modern'},
+  {n:'Classical Arabic (Quranic)',fam:'Arabic & Semitic',tag:'classical'},
+  {n:'Urdu',fam:'Arabic & Semitic',tag:'modern'},
+  {n:'Persian (Farsi)',fam:'Arabic & Semitic',tag:'modern'},
+  {n:'Pashto',fam:'Arabic & Semitic',tag:'modern'},
+  {n:'Hebrew (Biblical)',fam:'Arabic & Semitic',tag:'classical'},
+  {n:'Aramaic / Syriac',fam:'Arabic & Semitic',tag:'classical'},
+  {n:'Phoenician / Ugaritic',fam:'Arabic & Semitic',tag:'ancient'},
+  {n:'Akkadian cuneiform',fam:'Arabic & Semitic',tag:'ancient'},
+  {n:'Hindi / Bengali / Punjabi',fam:'South Asian',tag:'modern'},
+  {n:'Tamil / Telugu / Kannada',fam:'South Asian',tag:'modern'},
+  {n:'Chinese (Simplified/Traditional)',fam:'East Asian',tag:'modern'},
+  {n:'Japanese (Hiragana/Kanji)',fam:'East Asian',tag:'modern'},
+  {n:'Korean (Hangul)',fam:'East Asian',tag:'modern'},
+  {n:'Swahili / Hausa / Yoruba',fam:'African',tag:'modern'},
+  {n:'Amharic / Tigrinya',fam:'African',tag:'modern'},
+  {n:'Linear B (Mycenaean Greek)',fam:'Ancient Mediterranean',tag:'ancient'},
+  {n:'Etruscan',fam:'Ancient Mediterranean',tag:'ancient'},
+  {n:'Sumerian cuneiform',fam:'Ancient Near East',tag:'ancient'},
+  {n:'Babylonian / Assyrian',fam:'Ancient Near East',tag:'ancient'},
+  {n:'Hittite / Old Persian cuneiform',fam:'Ancient Near East',tag:'ancient'},
+  {n:'Luwian (hieroglyphic)',fam:'Ancient Near East',tag:'ancient'},
+  {n:'Egyptian Hieroglyphic',fam:'Ancient Egypt',tag:'ancient'},
+  {n:'Hieratic / Demotic',fam:'Ancient Egypt',tag:'ancient'},
+  {n:'Coptic',fam:'Ancient Egypt',tag:'classical'},
+  {n:'Oracle Bone Script',fam:'Classical East Asia',tag:'ancient'},
+  {n:'Classical Chinese (Wenyan)',fam:'Classical East Asia',tag:'classical'},
+  {n:'Sanskrit / Pali / Brahmi',fam:'Indic Classical',tag:'classical'},
+  {n:'Kharosthi / Tocharian',fam:'Indic Classical',tag:'ancient'},
+  {n:'Maya (Classic) / Nahuatl',fam:'Ancient Mediterranean',tag:'ancient'},
+];
+
+const TUCKER = [
+  ['a','flipped and reversed','U+FF417 / EVA+79','Most common VMS character'],
+  ['b','stem removed','U+FF447 / EVA+87','Reduces to 3-shape'],
+  ['c','top removed','U+FF400 / EVA+69','Bottom curve remains'],
+  ['d','stem moved to top','[MISSING]','Absent from some folios'],
+  ['e','stem removed (2 vars)','U+FF414 / EVA+6F','Open e and dotted e'],
+  ['f','middle stem removed','EVA+83 / U+FF443','Long-f loses crossbar'],
+  ['g','remove upper, flip','U+FF40C / EVA+63','Signals gh in Middle English'],
+  ['h','alter stem','U+FF404 / EVA+6D','Word-initial frequent'],
+  ['i','connect bottom stem','U+FF41A / EVA+6C','KEY: minim strokes for aiin'],
+  ['j','none (direct)','U+FF41D / EVA+71','Rare — mirrors ME j rarity'],
+  ['k','remove right section','U+FF408 / EVA+62','Two variants: k and ck'],
+  ['l','remove bottom, double','U+FF48A / EVA+CA','ll common in Middle English'],
+  ['m','upside down','U+FF505','Three-hump form when inverted'],
+  ['n','upside down','U+FF501','Inverted n'],
+  ['o','none (direct)','U+FF410 / EVA+61','Confirms letter-by-letter cipher'],
+  ['p','add loop and stem','U+FF420 / EVA+65','Two main variants'],
+  ['q','upside down, remove circle','U+FF4B1','Rare — mirrors ME q rarity'],
+  ['r','split in half','U+FF403 / EVA+72','TWO variants — strongest Tucker evidence'],
+  ['s','none (direct)','U+FF409 / EVA+64','Angular secretary form direct reuse'],
+  ['t','rotate 180°, reverse','U+FF422 / EVA+6B','Cross-top becomes curve'],
+  ['u','connect top','U+FF4C0','Top connection produces arch'],
+  ['v','upside down, reverse curve','U+FF4C1','Inverted v with curve reversal'],
+  ['w','remove left and right curve','U+FF41B / EVA+76','Stripped w'],
+  ['x','remove bottom','EVA+91 / U+FF451','Rare — x rare in Middle English'],
+  ['y','remove stem, flip','U+FF5B9','Common in ME: ye, yet, you'],
+  ['z','flip top','U+FF40F / EVA+68','Rare — z rare in medieval English'],
+];
+
+const ENOCH_ALPHA = [
+  ['Un','A','ALLA(totality)','Vowel — most common'],
+  ['Pe','B','—','Bilabial stop'],
+  ['Veh','C/K','—','Velar stop'],
+  ['Gon','D','DAH(3rd-person)','Dental stop — frequent'],
+  ['Or','E','OR(light/east)','Key vowel'],
+  ['Med','F','—','Labiodental fricative'],
+  ['Mals','G','GEM(create),GRAA(moon)','Velar — divine names'],
+  ['Tal','H','—','Aspirate'],
+  ['Gal','I/Y','IAD(God),IAN(I AM)','Most important divine root'],
+  ['Urs','K','—','Back-K'],
+  ['Don','R','RAAS(east)','Rhotic'],
+  ['Fam','S','SONF(reign)','Extremely frequent sibilant'],
+  ['Vran','N','NIIS(come),NAX(neg)','Nasal — universal negative'],
+  ['Graph','O','OD(and),OL(I/cmd)','Two most frequent words'],
+  ['Tal2','P','PIU(of time)','Bilabial stop'],
+  ['Ged','G/J','GEH(of)','Contextual alternation'],
+  ['Gisg','T','TARDEMAH(deep sleep)','Hebrew cognate'],
+  ['Mals2','U/V/W','VOOAN(truth),VONPH(wrath)','Three English sounds'],
+  ['Med2','X/Z','ZACAR(move),ZAMRAN(show)','Key imperative forms'],
+];
+
+const HEBREW = [
+  ['Aleph','Ox head','Strength, leader','A/silent','→ Greek Alpha → Latin A'],
+  ['Beth','Tent/house','Home, family','B','→ Greek Beta → Latin B'],
+  ['Gimel','Camel','Gather, walk','G','→ Greek Gamma → Latin C/G'],
+  ['Dalet','Door','Move, hang','D','→ Greek Delta → Latin D'],
+  ['Heh','Window','Reveal, breath','H','→ Greek Epsilon'],
+  ['Waw','Nail/hook','Add, secure','W/V','→ Greek Digamma (lost)'],
+  ['Zayin','Weapon','Cut, food','Z','→ Greek Zeta → Latin Z'],
+  ['Chet','Fence','Separate, outside','Ch','→ Greek Eta (H)'],
+  ['Tet','Basket','Surround, contain','T','→ Greek Theta Θ'],
+  ['Yod','Arm/hand','Work, throw','Y','→ Greek Iota → Latin I/J'],
+  ['Kaph','Palm of hand','Bend, open','K','→ Greek Kappa → Latin K'],
+  ['Lamed','Shepherd staff','Teach, yoke','L','→ Greek Lambda → Latin L'],
+  ['Mem','Water','Chaos, mighty','M','→ Greek Mu → Latin M'],
+  ['Nun','Fish/seed','Continue, heir','N','→ Greek Nu → Latin N'],
+  ['Samekh','Thorn','Grab, hate','S','→ Greek Xi/Omicron'],
+  ['Ayin','Eye','Watch, know','O/Ai','→ Greek Omicron → Latin O'],
+  ['Peh','Mouth','Blow, speak','P','→ Greek Pi → Latin P'],
+  ['Tsade','Trail/fishhook','Chase, harvest','Ts','→ (no direct Latin)'],
+  ['Qoph','Back of head','Horizon, circle','Q','→ Greek Koppa → Latin Q'],
+  ['Resh','Head','First, top','R','→ Greek Rho → Latin R'],
+  ['Shin','Teeth','Sharp, press','Sh','→ Greek Sigma → Latin S'],
+  ['Taw','Mark/sign','Covenant, seal','T','→ Greek Tau → Latin T'],
+];
+
+const GARDINER_SIGNS = [
+  {g:'A1',s:'𓀀',m:'seated man'},
+  {g:'A2',s:'𓀁',m:'man hand to mouth'},
+  {g:'B1',s:'𓁐',m:'seated woman'},
+  {g:'C1',s:'𓁛',m:'deity with sun disc'},
+  {g:'D21',s:'𓂋',m:'mouth / r sound'},
+  {g:'D28',s:'𓂓',m:'two arms / ka'},
+  {g:'D36',s:'𓂝',m:'arm / a sound'},
+  {g:'D58',s:'𓃀',m:'foot / b sound'},
+  {g:'E1',s:'𓃒',m:'bull'},
+  {g:'G1',s:'𓅀',m:'Egyptian vulture / A'},
+  {g:'G17',s:'𓅓',m:'owl / m sound'},
+  {g:'G43',s:'𓅱',m:'quail chick / w sound'},
+  {g:'I9',s:'𓆑',m:'horned viper / f'},
+  {g:'M17',s:'𓇋',m:'flowering reed / i'},
+  {g:'N1',s:'𓇯',m:'sky'},
+  {g:'N35',s:'𓈖',m:'water / n sound'},
+  {g:'N36',s:'𓈗',m:'canal / mr'},
+  {g:'O1',s:'𓉐',m:'house / pr'},
+  {g:'Q3',s:'𓊪',m:'stool / p sound'},
+  {g:'R4',s:'𓋹',m:'loaf on mat / ḥtp'},
+  {g:'S29',s:'𓋴',m:'folded cloth / s'},
+  {g:'T14',s:'𓌀',m:'throwstick / ḫ'},
+  {g:'V13',s:'𓄿',m:'tethering rope / ṯ'},
+  {g:'W24',s:'𓌀',m:'pot / nw'},
+  {g:'X1',s:'𓏏',m:'bread loaf / t'},
+  {g:'Z1',s:'𓏤',m:'stroke / determinative'},
+  {g:'Aa1',s:'𓐍',m:'placenta / ḫ'},
+  {g:'F35',s:'𓄡',m:'heart / ib'},
+];
+
+// ─── STATE ──────────────────────────────────────────────
+let selMode = 'cipher';
+let selFam = 'Auto-detect all';
+let selLangs = [];
+let imgDataMap = {img:null, ms:null};
+let history = JSON.parse(localStorage.getItem('omega-history')||'[]');
+let deferredInstall = null;
+
+// ─── INIT ───────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', ()=>{
+  buildModeGrid();
+  buildFamChips();
+  filterLangs();
+  buildTuckerTable();
+  buildEnochTable();
+  buildHebrewTable();
+  buildGardinerGrid();
+  buildEgyptParallels();
+  buildScriptsTable();
+  buildMethodList();
+  buildDivineList();
+  buildRefsList();
+  document.getElementById('kb-text').textContent = KB.trim();
+  checkAPIKey();
+  renderHistory();
+  offline();
+});
+
+window.addEventListener('online',  ()=>document.body.classList.remove('offline'));
+window.addEventListener('offline', ()=>document.body.classList.add('offline'));
+function offline(){if(!navigator.onLine)document.body.classList.add('offline');}
+
+// PWA install
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault(); deferredInstall=e;
+  document.getElementById('install-btn').style.display='block';
+});
+
+function installPWA(){
+  if(deferredInstall){deferredInstall.prompt();deferredInstall=null;}
+}
+
+// Offline support: Single-file HTML works offline natively when saved to disk.
+// For PWA service worker (only works when served from a real domain), uncomment below
+// and create a sw.js file alongside this HTML:
+// if('serviceWorker' in navigator && location.protocol === 'https:'){
+//   navigator.serviceWorker.register('./sw.js').catch(()=>console.log('SW unavailable — offline still works via file:// or browser cache'));
+// }
+// Note: When opened directly as file://, this app fully works offline already.
+
+// ─── TAB SWITCHING ──────────────────────────────────────
+function switchTab(id, btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function switchInput(id, btn){
+  ['text','image','manuscript'].forEach(m=>{
+    document.getElementById('input-'+m).style.display = m===id?'block':'none';
+  });
+  document.querySelectorAll('.sub-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function switchKB(id, btn){
+  document.querySelectorAll('.kb-panel').forEach(p=>p.style.display='none');
+  document.getElementById('kb-'+id).style.display='block';
+  document.querySelectorAll('#tab-knowledge .sub-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ─── API KEY ────────────────────────────────────────────
+function saveKey(){
+  const v = document.getElementById('api-key-input').value ||
+            document.getElementById('api-key-settings').value;
+  if(v.trim().startsWith('sk-')){
+    localStorage.setItem('omega-key', v.trim());
+    document.getElementById('key-status').style.display='block';
+    setTimeout(()=>document.getElementById('key-status').style.display='none',2000);
+    checkAPIKey();
+  }
+}
+function clearKey(){
+  localStorage.removeItem('omega-key');
+  document.getElementById('api-key-input').value='';
+  document.getElementById('api-key-settings').value='';
+  checkAPIKey();
+}
+function getKey(){ return localStorage.getItem('omega-key')||''; }
+function checkAPIKey(){
+  const ok = !!getKey();
+  document.getElementById('api-ok').style.display = ok?'flex':'none';
+  document.getElementById('api-missing').style.display = ok?'none':'block';
+}
+
+// ─── IMAGE HANDLING ─────────────────────────────────────
+function loadImg(inp, slot){
+  const file = inp.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    imgDataMap[slot] = {src:e.target.result, b64:e.target.result.split(',')[1]};
+    const prev = document.getElementById(slot+'-preview');
+    prev.innerHTML = `<img src="${e.target.result}" style="border-radius:6px">`;
+  };
+  reader.readAsDataURL(file);
+}
+function handleDrop(e, slot){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag');
+  const file = e.dataTransfer.files[0];
+  if(!file) return;
+  const inp = document.getElementById(slot+'-file');
+  const dt = new DataTransfer(); dt.items.add(file); inp.files = dt.files;
+  loadImg(inp, slot);
+}
+
+// ─── MODE GRID ──────────────────────────────────────────
+function buildModeGrid(){
+  const g = document.getElementById('mode-grid');
+  MODES.forEach(m=>{
+    const d = document.createElement('div');
+    d.className = 'mode-card' + (m.id===selMode?' on':'');
+    d.innerHTML = `<div class="mode-icon">${m.icon}</div><div class="mode-name">${m.name}</div><div class="mode-desc">${m.desc}</div>`;
+    d.onclick = ()=>{
+      selMode=m.id;
+      document.querySelectorAll('.mode-card').forEach(x=>x.classList.remove('on'));
+      d.classList.add('on');
+    };
+    g.appendChild(d);
+  });
+}
+
+// ─── LANG PICKER ────────────────────────────────────────
+function buildFamChips(){
+  const c = document.getElementById('fam-chips');
+  FAMILIES.forEach(f=>{
+    const ch = document.createElement('div');
+    ch.className='fam-chip'+(f===selFam?' on':'');
+    ch.textContent=f;
+    ch.onclick=()=>{
+      selFam=f;
+      document.querySelectorAll('.fam-chip').forEach(x=>x.classList.remove('on'));
+      ch.classList.add('on');
+      filterLangs();
+    };
+    c.appendChild(ch);
+  });
+}
+
+function filterLangs(){
+  const q=(document.getElementById('lang-search').value||'').toLowerCase();
+  const ll=document.getElementById('lang-list');
+  const filt=ALL_LANGS.filter(l=>
+    (selFam==='Auto-detect all'||l.fam===selFam) &&
+    (!q||l.n.toLowerCase().includes(q))
+  );
+  const TAGS={modern:'pill-mod',classical:'pill-cls',ancient:'pill-anc',unknown:'pill-unk',constructed:'pill-cst',auto:'pill-sol'};
+  ll.innerHTML=filt.map(l=>`
+    <div class="lang-item${selLangs.includes(l.n)?' on':''}" onclick="toggleLang('${l.n.replace(/'/g,"\\'")}')">
+      <span>${l.n}</span>
+      <span class="lang-tag ${TAGS[l.tag]||'pill-mod'}">${l.tag}</span>
+    </div>`).join('');
+}
+
+function toggleLang(n){
+  selLangs=selLangs.includes(n)?selLangs.filter(x=>x!==n):[...selLangs,n];
+  filterLangs();
+  const sc=document.getElementById('sel-chips');
+  sc.innerHTML=selLangs.map(n=>`
+    <div class="sel-chip">${n}<span class="rm" onclick="toggleLang('${n.replace(/'/g,"\\'")}')">×</span></div>
+  `).join('');
+}
+
+// ─── SYSTEM PROMPT BUILDER ──────────────────────────────
+function buildSysPrompt(){
+  const mode = MODES.find(m=>m.id===selMode)||MODES[9];
+  const langNote = selLangs.length===0
+    ? 'Detect and identify ALL languages, scripts, writing systems — modern, classical, ancient, undeciphered, constructed, angelic.'
+    : `Focus on: ${selLangs.join(', ')}. Also identify any additional scripts present.`;
+  const fmt = document.getElementById('out-format').value;
+  const depth = document.getElementById('depth').value;
+  const respLang = document.getElementById('resp-lang').value;
+  const msCtx = (document.getElementById('ms-context')||{}).value||'';
+
+  return `You are Dr. Muhammad Zubair's AI research partner — the world's foremost expert on ALL writing systems for digital humanities and cross-religious truth research at Bahria University Islamabad.
+
+COMPLETE SPECIALIST KNOWLEDGE BASE:
+${KB}
+
+RESEARCH MODE: ${mode.name} — ${mode.desc}
+LANGUAGE FOCUS: ${langNote}
+OUTPUT FORMAT: ${fmt}
+ANALYSIS DEPTH: ${depth}
+RESPONSE LANGUAGE: ${respLang}
+${msCtx?'MANUSCRIPT CONTEXT: '+msCtx:''}
+
+OUTPUT STRUCTURE (use this for "${fmt}"):
+${fmt==='Academic Markdown'?`## Script & Language Identification\n## Alphabet / Glyph Table\n## Diplomatic Transcription\n## Transliteration\n## Translation (CONFIRMED/PROBABLE/POSSIBLE/UNKNOWN)\n## Linguistic Analysis\n## Statistical Fingerprint (IC, Zipf)\n## Cipher Analysis\n## [UNDECIPHERED] Sections\n## Cross-Script Parallels\n## Cross-Religious Cognates\n## New Digital Humanities Findings\n## APA 7th References`:
+fmt==='Structured JSON'?'Return ONLY valid JSON with keys: scripts_detected, alphabet_analysis, extracted_text, confidence_tiers, statistical_fingerprint, cipher_analysis, cross_script_parallels, cross_religious, new_findings, references, honesty':
+fmt==='Linguistic Analysis Report'?'10 sections: Script ID · Alphabet · Phonology · Morphology · Syntax · Semantics · Statistics · Cipher · Cross-script · New Findings':
+'Clear structured output with labelled sections.'}
+
+UNIVERSAL TASKS:
+1. Identify EVERY script/alphabet/language including obscure/esoteric/constructed
+2. Extract all text with exact Unicode characters preserved
+3. Alphabet/glyph table: sign → phoneme → Unicode → cipher manipulation
+4. Transliterate to Latin where needed
+5. Translate with honest confidence tiers — NEVER fabricate
+6. Compute/estimate IC and Zipf for unknown scripts
+7. Apply 10-step decipherment protocol for unknown scripts
+8. Mark all uncertain sections [UNDECIPHERED]
+9. Cross-religious cognate chains where relevant
+10. APA 7th scholarly references
+11. Mark new findings for digital humanities clearly
+
+HONESTY DECLARATION: I mark all uncertain sections [UNDECIPHERED]. I never invent translations. Confidence: CONFIRMED/PROBABLE/POSSIBLE/UNKNOWN.`;
+}
+
+// ─── RUN EXTRACTION ─────────────────────────────────────
+async function runExtraction(){
+  const key = getKey();
+  if(!key){
+    showErr('ext-error','Please save your Anthropic API key in Settings tab first.');
+    return;
+  }
+  const btn = document.getElementById('run-btn');
+  const prog = document.getElementById('progress');
+  const progTxt = document.getElementById('prog-text');
+  btn.disabled=true; prog.style.display='flex';
+  document.getElementById('ext-error').innerHTML='';
+  document.getElementById('ext-result').innerHTML='';
+
+  const steps=['Scanning script signatures…','Frequency analysis…','IC & Zipf tests…','Cross-referencing KB…','Generating analysis…'];
+  let si=0; const iv=setInterval(()=>{progTxt.textContent=steps[si%steps.length];si++;},1100);
+
+  // Build content (use data-input-mode for robust detection)
+  const activeBtn = document.querySelector('.sub-tab.active[data-input-mode]');
+  const inputMode = activeBtn ? activeBtn.getAttribute('data-input-mode') : 'text';
+  const content=[];
+  const txt = document.getElementById('txt-input').value.trim();
+
+  if(inputMode==='text'&&txt){
+    content.push({type:'text',text:`Analyse this text using your full specialist knowledge:\n\n${txt}`});
+  } else if(inputMode==='image'&&imgDataMap.img){
+    content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:imgDataMap.img.b64}});
+    content.push({type:'text',text:'Analyse this image. Identify all scripts, symbols, writing systems. Apply full ancient language analysis.'});
+  } else if(inputMode==='manuscript'&&imgDataMap.ms){
+    content.push({type:'image',source:{type:'base64',media_type:'image/jpeg',data:imgDataMap.ms.b64}});
+    content.push({type:'text',text:`Analyse this manuscript scan. ${document.getElementById('ms-context').value} Full diplomatic transcription and scholarly annotation.`});
+  } else {
+    content.push({type:'text',text:`Demonstrate expertise: compare Voynich MS, Liber Loagaeth, Indus Valley Script — statistics, decipherment priorities, cross-religious divine name cognates. Format: ${document.getElementById('out-format').value}.`});
+  }
+
+  try{
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,system:buildSysPrompt(),messages:[{role:'user',content}]})
+    });
+    const data = await resp.json();
+    clearInterval(iv); prog.style.display='none';
+    if(data.error){showErr('ext-error',data.error.message);}
+    else{
+      const result = data.content.filter(b=>b.type==='text').map(b=>b.text).join('\n');
+      showResult('ext-result',result,document.getElementById('out-format').value);
+      saveHistory({ts:new Date().toLocaleTimeString(),mode:selMode,fmt:document.getElementById('out-format').value,txt:result});
+    }
+  }catch(e){
+    clearInterval(iv); prog.style.display='none';
+    showErr('ext-error',`Network error: ${e.message}. Check connection and API key.`);
+  }
+  btn.disabled=false;
+}
+
+// ─── ALPHABET DECODE ────────────────────────────────────
+async function runAlphabetDecode(){
+  const key=getKey();
+  if(!key){showErr('alph-error','API key required — add in Settings.');return;}
+  const inp=document.getElementById('alph-input').value.trim();
+  if(!inp){showErr('alph-error','Enter glyphs or transliteration to decode.');return;}
+  const prog=document.getElementById('alph-progress');
+  prog.style.display='flex';
+  document.getElementById('alph-error').innerHTML='';
+  document.getElementById('alph-result').innerHTML='';
+  const script=document.getElementById('alph-script').value;
+  const fmt=document.getElementById('alph-format').value;
+  const sys=`You are the world's foremost expert on alphabets and cipher systems. Apply all knowledge from:\n${KB}\n\nFor each glyph/letter/sign provided:\n1. Identify which script it belongs to\n2. Give its phoneme value\n3. Unicode code point\n4. Cipher manipulation (if Voynich Tucker)\n5. Cross-script parallels\n6. Format: ${fmt}`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,system:sys,messages:[{role:'user',content:`Decode these glyphs/letters${script?` (target script: ${script})`:''}:\n\n${inp}`}]})
+    });
+    const data=await resp.json();
+    prog.style.display='none';
+    if(data.error)showErr('alph-error',data.error.message);
+    else showResult('alph-result',data.content.filter(b=>b.type==='text').map(b=>b.text).join('\n'),fmt);
+  }catch(e){prog.style.display='none';showErr('alph-error',e.message);}
+}
+
+// ─── GARDINER TRANSLATE ─────────────────────────────────
+async function translateGardiner(){
+  const key=getKey();
+  if(!key){document.getElementById('gard-result').innerHTML='<div class="err-box">⚠ API key required — add in Settings.</div>';return;}
+  const codes=document.getElementById('gardiner-input').value.trim();
+  if(!codes){document.getElementById('gard-result').innerHTML='<div class="err-box">⚠ Enter Gardiner codes (e.g. G17 N35 X1 O1).</div>';return;}
+  const prog=document.getElementById('gard-progress');
+  const mode=document.getElementById('gardiner-mode').value;
+  prog.style.display='flex'; document.getElementById('gard-result').innerHTML='';
+  const sys=`You are an expert Egyptologist trained on the Google Fabricius Workbench system and the Berlin-Brandenburg Academy Egyptian dictionary (CC BY-SA 4.0).\n\n${KB}\n\nFor these Gardiner codes:\n1. Identify each sign (category, form, name)\n2. Give phonetic value (uniliteral/biliteral/triliteral)\n3. Dictionary translation (Berlin-Brandenburg Academy)\n4. Grammatical role in sequence\n5. Full phrase/text translation with confidence tier\n6. Cross-religious parallels if relevant\n7. Mode: ${mode}`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,system:sys,messages:[{role:'user',content:`Translate these Egyptian hieroglyphs (Gardiner codes):\n${codes}`}]})
+    });
+    const data=await resp.json();
+    prog.style.display='none';
+    if(data.error)document.getElementById('gard-result').innerHTML=`<div class="err-box">${data.error.message}</div>`;
+    else showResult('gard-result',data.content.filter(b=>b.type==='text').map(b=>b.text).join('\n'),'Academic Markdown');
+  }catch(e){prog.style.display='none';document.getElementById('gard-result').innerHTML=`<div class="err-box">${e.message}</div>`;}
+}
+
+// ─── DISPLAY HELPERS ────────────────────────────────────
+function showResult(elId, text, fmt){
+  const el=document.getElementById(elId);
+  el.innerHTML=`
+    <div class="result-box">
+      <div class="result-hdr">
+        <span class="result-label">Result — ${fmt}</span>
+        <div class="result-btns">
+          <button class="btn-sm" onclick="copyText(this,'${elId}')">Copy</button>
+          <button class="btn-sm" onclick="downloadText('${elId}','${fmt}')">Download</button>
+        </div>
+      </div>
+      <div class="result-pre" id="${elId}-pre">${escHtml(text)}</div>
+      <div class="result-footer">
+        <div class="result-stat"><span class="result-stat-n">${text.length.toLocaleString()}</span><span class="result-stat-l">Characters</span></div>
+        <div class="result-stat"><span class="result-stat-n">${text.split('\n').length}</span><span class="result-stat-l">Lines</span></div>
+        <div class="result-stat"><span class="result-stat-n">${selLangs.length||'Auto'}</span><span class="result-stat-l">Scripts</span></div>
+      </div>
+    </div>`;
+}
+function showErr(elId,msg){document.getElementById(elId).innerHTML=`<div class="err-box">⚠ ${escHtml(msg)}</div>`;}
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function copyText(btn,elId){
+  const pre=document.getElementById(elId+'-pre');
+  if(pre){navigator.clipboard.writeText(pre.textContent);btn.textContent='✓';setTimeout(()=>btn.textContent='Copy',2000);}
+}
+function downloadText(elId,fmt){
+  const pre=document.getElementById(elId+'-pre');
+  if(!pre)return;
+  const ext=fmt.includes('JSON')?'json':fmt.includes('CSV')?'csv':'md';
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(pre.textContent);
+  a.download=`omega_${Date.now()}.${ext}`; a.click();
+}
+
+
+// ─── TEST CONNECTION ────────────────────────────────────
+async function testConnection(){
+  const key = getKey();
+  if(!key){alert('No API key saved');return;}
+  const btn = event.target;
+  btn.textContent='Testing...'; btn.disabled=true;
+  try{
+    const resp = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:50,messages:[{role:'user',content:'Reply with just: OK'}]})
+    });
+    const data = await resp.json();
+    if(data.error){
+      alert('❌ Failed: '+data.error.message);
+    } else {
+      alert('✅ Connection works! Response: '+(data.content?.[0]?.text||'OK'));
+    }
+  } catch(e){
+    alert('❌ Network error: '+e.message);
+  }
+  btn.textContent='Test Connection'; btn.disabled=false;
+}
+
+// ─── HISTORY ────────────────────────────────────────────
+function saveHistory(item){
+  history.unshift(item); if(history.length>30)history.pop();
+  localStorage.setItem('omega-history',JSON.stringify(history));
+  renderHistory(); document.getElementById('hist-tab').textContent=`🕐 History (${history.length})`;
+}
+function renderHistory(){
+  const el=document.getElementById('history-list');
+  if(!history.length){el.innerHTML='<div style="font-size:.76rem;color:var(--dim)">No analyses yet.</div>';return;}
+  el.innerHTML=history.map((h,i)=>`
+    <div class="hist-item">
+      <div class="hist-hdr">
+        <span class="hist-meta">${h.ts} · ${h.mode} · ${h.fmt}</span>
+        <button class="btn-sm" onclick="cpHist(${i})">Copy</button>
+      </div>
+      <div class="hist-pre" id="hist-${i}">${escHtml(h.txt)}</div>
+    </div>`).join('');
+}
+function cpHist(i){navigator.clipboard.writeText(history[i].txt);}
+function clearHistory(){history=[];localStorage.removeItem('omega-history');renderHistory();}
+function exportHistory(){
+  const a=document.createElement('a');
+  a.href='data:application/json,'+encodeURIComponent(JSON.stringify(history,null,2));
+  a.download=`omega_history_${Date.now()}.json`; a.click();
+}
+function importHistory(inp){
+  const f=inp.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{try{history=JSON.parse(e.target.result);localStorage.setItem('omega-history',JSON.stringify(history));renderHistory();}catch(err){alert('Invalid JSON file');}};
+  r.readAsText(f);
+}
+function exportKB(){
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(KB);
+  a.download='omega_knowledge_base.md'; a.click();
+}
+function copyKB(){navigator.clipboard.writeText(KB);}
+
+// ─── BUILD OFFLINE TABLES ───────────────────────────────
+function buildTuckerTable(){
+  document.getElementById('tucker-tbody').innerHTML=TUCKER.map(([lat,op,eva,note])=>`
+    <tr><td>${lat.toUpperCase()}</td><td>${op}</td><td style="font-family:var(--mono);font-size:.65rem;color:var(--blue)">${eva}</td><td>${note}</td></tr>`).join('');
+}
+function buildEnochTable(){
+  document.getElementById('enoch-tbody').innerHTML=ENOCH_ALPHA.map(([name,sound,words,fn])=>`
+    <tr><td>${name}</td><td style="color:var(--blue)">${sound}</td><td style="color:var(--green);font-family:var(--mono);font-size:.65rem">${words}</td><td>${fn}</td></tr>`).join('');
+}
+function buildHebrewTable(){
+  document.getElementById('heb-tbody').innerHTML=HEBREW.map(([name,pic,mean,sound,evol])=>`
+    <tr><td>${name}</td><td>${pic}</td><td>${mean}</td><td style="color:var(--blue)">${sound}</td><td style="font-size:.65rem;color:var(--dim)">${evol}</td></tr>`).join('');
+}
+function buildGardinerGrid(){
+  const g=document.getElementById('gardiner-grid');
+  GARDINER_SIGNS.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='glyph-cell'; d.title=s.m;
+    d.innerHTML=`<div style="font-size:1.4rem">${s.s}</div><div class="glyph-gard">${s.g}</div><div class="glyph-mean">${s.m}</div>`;
+    d.onclick=()=>{document.getElementById('gardiner-input').value+=(document.getElementById('gardiner-input').value?' ':'')+s.g;};
+    g.appendChild(d);
+  });
+}
+function buildEgyptParallels(){
+  const data=[
+    {dot:'var(--gold)',t:'Fish / Water (N35, K series)',b:'Indus IS-267 (fish/mīn/star) parallels Egyptian fish sign used for phonetic purpose. Both use rebus: shape→sound→meaning. Parpola 1994 cites Egyptian as decipherment model.'},
+    {dot:'var(--green)',t:'Determinatives',b:'Egyptian silent classifiers follow words (e.g. seated man A1 = person). Indus IS-336 (tree) leads the master triplet as a determinative-equivalent. Fabricius workbench uses these to group signs.'},
+    {dot:'var(--blue)',t:'Royal cartouches → Indus text clusters',b:'Royal names in Egyptian are enclosed in oval loops. Indus sign clusters around IS-267/IS-391 may be name-owner cartouche equivalents. Champollion cracked Egyptian via royal names — same strategy possible for Indus.'},
+    {dot:'var(--purple)',t:'Gardiner code system → Zubair decipherment engine',b:'Fabricius assigns Gardiner codes (A1, G17, N35…) via ML. The same taxonomic principle — sign category + number — can be extended to Indus (IS-001 through IS-417) for systematic AI analysis.'},
+    {dot:'var(--red)',t:'Berlin-Brandenburg Dictionary (CC BY-SA 4.0)',b:'The open translation data from Fabricius maps Gardiner sequences to Middle Egyptian meanings. Zubair\'s engine uses the same semantic chain: sign→Gardiner→dictionary→meaning→cross-religious parallel.'},
+  ];
+  document.getElementById('egypt-parallels').innerHTML=data.map(d=>`
+    <div class="cross-row">
+      <div class="dot" style="background:${d.dot}"></div>
+      <div><div class="row-title">${d.t}</div><div class="row-body">${d.b}</div></div>
+    </div>`).join('');
+}
+function buildScriptsTable(){
+  const scripts=[
+    ['Indus Valley Script','2600 BCE','unknown','417','IS-342=-m, IS-267=mīn/star','78% max'],
+    ['Enochian','1583 CE','constructed','21 letters','VSO grammar, IC=0.082, 264 words','88% structural'],
+    ['Liber Loagaeth','1583 CE','unknown','49×49 grids','Angels refused translation','~18% ceiling'],
+    ['Book of Soyga','16th c.','solved','36×36','(prev+above) mod 23, 100% accuracy','100% formula'],
+    ['Voynich MS','1404-38 CE','unknown','~170','IC=0.027 paradox, Tucker cipher hyp.','~35% hypothesis'],
+    ['Hildegard LI','c.1150 CE','solved','23 letters','First conlang, Latin grammar, 900 vocab','100% vocabulary'],
+    ['Angel Runic','Unknown','constructed','26+digraphs','Spiriform, 14 divine symbols','Constructed'],
+    ['Hungarian Rovás','4th c. CE','deciphered','40+','s=sh critical key, 12 Fischer variants','100% phonetics'],
+    ['Ancient Hebrew','2000 BCE','solved','22','4-char system, pictographic chain','100%'],
+    ['Egyptian Hieroglyphs','3200 BCE','solved','750+','Fabricius/Gardiner, Champollion 1822','100%'],
+    ['Linear B','1500 BCE','solved','~90','Ventris grid technique 1952','100%'],
+    ['Mayan Glyphs','250-900 CE','solved','800+','Knorozov rebus method ~1990','95%+'],
+    ['Sumerian Cuneiform','3400 BCE','solved','600+','Found with Indus seals at Ur','95%+'],
+    ['Ge\'ez / Ethiopic','350 BCE','solved','231 syllables','Abugida, 33×7, LTR','100%'],
+    ['Linear A','1800 BCE','unknown','311','Closest parallel to Indus problem','[UNDECIPHERED]'],
+    ['Meroitic','300 BCE','partial','~23','Alphabet known, language unknown','30%'],
+    ['Rongorongo','1200 CE','unknown','120','Easter Island, boustrophedon','[UNDECIPHERED]'],
+    ['Proto-Elamite','3100 BCE','unknown','~1000','Likely numerical — NOT full language','[UNDECIPHERED]'],
+  ];
+  const PILLMAP={solved:'pill-sol',unknown:'pill-unk',constructed:'pill-cst',deciphered:'pill-cls',partial:'pill-anc'};
+  document.getElementById('scripts-tbody').innerHTML=scripts.map(r=>`
+    <tr>
+      <td>${r[0]}</td>
+      <td>${r[1]}</td>
+      <td><span class="pill ${PILLMAP[r[2]]||'pill-mod'}">${r[2]}</span></td>
+      <td>${r[3]}</td>
+      <td>${r[4]}</td>
+      <td style="color:var(--green);font-family:var(--mono);font-size:.64rem">${r[5]}</td>
+    </tr>`).join('');
+}
+function buildMethodList(){
+  const steps=[
+    ['1. Frequency Analysis','Count every sign/word. The dominant sign is usually grammatical — a suffix, article, or determiner. Indus IS-342 (10% of corpus) = nominative -m.'],
+    ['2. Positional Analysis (S/M/E)','Signs consistently at text-start = openers/titles. Text-end = case suffixes. IS-342 is 97% text-final → suffix confirmed.'],
+    ['3. Pictographic Anchor','Signs resembling real objects anchor the meaning chain. IS-267 looks like a fish → Tamil mīn = fish → begins the rebus chain.'],
+    ['4. Rebus / Homophone Principle','Fish sign used for STAR because mīn=fish=star. Champollion used this for Egyptian (owl=m sound). Most powerful decipherment tool.'],
+    ['5. Bilingual Rosetta Method','Same text in unknown + known language. Never found for Indus. Ur excavations (Indus seals alongside Sumerian tablets) are the best hope.'],
+    ['6. Index of Coincidence (IC)','Formula: IC = Σ[f(f-1)] / [N(N-1)]. Random=0.038, English=0.067, Enochian=0.082, VMS=0.027 (PARADOX — below random but Zipf-perfect).'],
+    ['7. Zipf-Mandelbrot Law','Word frequency × rank^b ≈ constant in ALL natural languages. Indus and VMS both fit → they encode language, not random noise. Proto-Elamite fails Zipf.'],
+    ['8. Ventris Grid Technique','Build consonant×vowel grid from positional constraints. Assign tentative phonemes, test across corpus. Used to crack Linear B (Greek) in 1952.'],
+    ['9. K-Means Clustering + PCA','Group signs by visual + statistical features. Indus: Cluster 3 = IS-342 alone (unique dominant suffix), Cluster 5 = grammar backbone.'],
+    ['10. Cross-Script Parallel','Find the same structural pattern in a known script → apply to unknown. Sumerian NINDA opener = IS-293 opener. Linear B -o ending = IS-342 -m behavior.'],
+  ];
+  document.getElementById('method-list').innerHTML=steps.map(([t,d])=>`
+    <div class="cross-row">
+      <div class="dot" style="background:var(--gold)"></div>
+      <div><div class="row-title">${t}</div><div class="row-body">${d}</div></div>
+    </div>`).join('');
+}
+function buildDivineList(){
+  const divine=[
+    ['Enochian','IAD','God — primary Enochian divine name (Dee/Kelley 1583)'],
+    ['Hebrew','יהוה YHWH','Tetragrammaton, root yhw = to be/become'],
+    ['Arabic','الله ALLAH','Al + Ilah = "The God" — same Semitic root'],
+    ['Aramaic','ܐܠܗܐ ALAHA','Cognate of Hebrew Elohim — Jesus used this form'],
+    ['Syriac','ܐܠܗܐ ALAHA','Same Aramaic root — preserved in Peshitta Bible'],
+    ['Greek','ΘΕΟΣ Theos','PIE *dhewbh = divine — used in LXX and NT'],
+    ['Sanskrit','देव Deva','PIE *dyeu = sky/shine — same root as Zeus/Jupiter'],
+    ['Tamil','கடவுள் Kadavul','Kada (transcend) + ul (within) — immanent divine'],
+    ['Sumerian','AN 𒀭','Sky/heaven = divine being — determinative for all gods'],
+  ];
+  document.getElementById('divine-list').innerHTML=divine.map(([t,n,note])=>`
+    <div class="cross-row">
+      <div class="dot" style="background:var(--gold)"></div>
+      <div><span style="font-size:.65rem;color:var(--gold2);font-family:var(--mono);margin-right:8px">${t}</span><span style="font-size:.85rem;color:var(--text);margin-right:8px">${n}</span><span style="font-size:.7rem;color:var(--muted)">${note}</span></div>
+    </div>`).join('');
+
+  document.getElementById('seven-list').innerHTML=[
+    ['Hebrew','שֶׁבַע sheva','Seven = completeness/covenant (Shabbat = seventh day)'],
+    ['Arabic','سبعة sab\'a','Same Semitic root s-b-\' (shabbu = to be full/sated)'],
+    ['Enochian','7 Heptarchic kings','7 planetary angels, 7 heptagonal rings in Sigillum'],
+    ['Sanskrit','सप्त sapta','PIE *septm — connects ALL Indo-European languages'],
+    ['Sumerian','7 great gods','An, Enlil, Enki, Ninhursag, Nanna, Utu, Inanna'],
+    ['Indus Valley','7-stroke signs','Appear at sentence boundaries — numerical/sacred marker?'],
+  ].map(([t,n,note])=>`<div class="cross-row"><div class="dot" style="background:var(--blue)"></div><div><span style="font-size:.65rem;color:var(--gold2);font-family:var(--mono);margin-right:8px">${t}</span><span style="font-size:.82rem;color:var(--text);margin-right:8px">${n}</span><span style="font-size:.7rem;color:var(--muted)">${note}</span></div></div>`).join('');
+
+  document.getElementById('creation-list').innerHTML=[
+    ['Hebrew','בְּרֵאשִׁית Bereshit','In the beginning — Genesis 1:1 (root rsh = head/first)'],
+    ['Arabic','بِسْمِ بِسْمِ Bismillah','In the name of — Quran 1:1 (ism = name, Allah = God)'],
+    ['Enochian','ZACAR','Move/open/begin — opens all 19 Angelic Calls'],
+    ['Sanskrit','AUM / OM','Primordial sound, beginning of creation in all Vedic tradition'],
+    ['Tamil','ஆதி Aadhi','Primordial, first — shared root with Adi/Adam?'],
+    ['Sumerian','AN+KI','Heaven+Earth separation = first creative act (Enuma Elish)'],
+  ].map(([t,n,note])=>`<div class="cross-row"><div class="dot" style="background:var(--green)"></div><div><span style="font-size:.65rem;color:var(--gold2);font-family:var(--mono);margin-right:8px">${t}</span><span style="font-size:.82rem;color:var(--text);margin-right:8px">${n}</span><span style="font-size:.7rem;color:var(--muted)">${note}</span></div></div>`).join('');
+}
+function buildRefsList(){
+  const refs=[
+    ['Indus Valley Script','Parpola, A. (1994). Deciphering the Indus Script. Cambridge University Press.'],
+    ['Indus Valley Script','Mahadevan, I. (1977). The Indus Script: Texts, Concordance and Tables. Archaeological Survey of India.'],
+    ['Indus Valley Script','Rao, R. P. N., et al. (2009). A Markov model of the Indus script. Science, 324(5931), 1165.'],
+    ['Enochian/Loagaeth','Reeds, J. (1996). William F. Friedman\'s transcription of the Book of Soyga. Cryptologia, 20(4), 299–314.'],
+    ['Enochian/Loagaeth','Harkness, D. E. (1999). John Dee\'s Conversations with Angels. Cambridge University Press.'],
+    ['Enochian','Peterson, J. H. (2003). John Dee\'s Five Books of Mystery. Weiser Books.'],
+    ['Enochian','Laycock, D. C. (1994). The Complete Enochian Dictionary. Weiser Books.'],
+    ['Voynich MS','Tucker, A. O., & Tucker, R. H. (2013). A preliminary analysis of the botany, zoology, and mineralogy of the Voynich Manuscript. HerbalGram, 100, 70–85.'],
+    ['Voynich MS','Zandbergen, R. (2010). The Voynich Manuscript. http://www.voynich.nu/'],
+    ['Hildegard','Higley, S. L. (2007). Hildegard of Bingen\'s Unknown Language. Palgrave Macmillan.'],
+    ['Ancient Hebrew','Benner, J. A. (2004). His Name is One. Virtualbookworm.com.'],
+    ['Egyptian/Fabricius','Champollion, J.-F. (1822). Lettre à M. Dacier. Paris.'],
+    ['Egyptian/Fabricius','Google Arts & Culture. (2020). Fabricius Workbench [Open source Angular app]. GitHub. https://github.com/googleartsculture/workbench'],
+    ['Linear B','Ventris, M., & Chadwick, J. (1973). Documents in Mycenaean Greek. Cambridge University Press.'],
+    ['Mayan','Knorozov, Y. (1952). Ancient writing of Central America. Soviet Ethnography, 3, 100–118.'],
+    ['ML Ancient Languages','Sommerschield, T., et al. (2023). Machine Learning for Ancient Languages: A Survey. Computational Linguistics, 1–44.'],
+  ];
+  document.getElementById('refs-list').innerHTML=refs.map(([script,ref])=>`
+    <div style="padding:7px 0;border-bottom:1px solid rgba(200,146,42,0.1)">
+      <div style="font-size:.6rem;color:var(--gold2);font-family:var(--mono);margin-bottom:2px">${script}</div>
+      <div style="font-size:.72rem;color:var(--muted);line-height:1.5">${ref}</div>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>
